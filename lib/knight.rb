@@ -6,9 +6,9 @@ require 'colorize'
 class Knight
   attr_reader :pos
 
-  def initialize(white)
+  def initialize(is_white)
     @pos = nil
-    @symbol = if white
+    @symbol = if is_white
                 '♘'
               else
                 '♞'

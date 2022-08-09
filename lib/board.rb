@@ -6,23 +6,27 @@ require 'colorize'
 class ChessBoard
   attr_reader :board
 
-  def initialize
-    @board = create_board
+  def initialize(dimensions)
+    @board = create_board(dimensions)
   end
 
-  def create_board
-    Array.new(8) { Array.new(8) }
+  def create_board(dimensions)
+    Array.new(dimensions) { Array.new(dimensions) }
   end
 
-  def move_knight(new_pos)
-    knight = knight_get
-    pos = knight.pos
-    return unless knight.valid_move?(pos, new_pos)
+  def move_piece(piece_pos, new_pos)
+    piece = get_piece(piece_pos)
+    pos = piece.pos
+    return unless piece.valid_move?(piece_pos, new_pos)
 
-    knight.update_pos(new_pos)
+    piece.update_pos(new_pos)
 
-    board[new_pos[0]][new_pos[1]] = knight
+    board[new_pos[0]][new_pos[1]] = piece
     board[pos[0]][pos[1]] = nil
+  end
+
+  def get_piece(piece_pos)
+    board[piece_pos[0]][piece_pos[1]]
   end
 
   def place_piece(piece, pos)
@@ -41,14 +45,6 @@ class ChessBoard
   end
 
   private
-
-  def knight_get
-    board.each do |row|
-      piece = row.find { |element| !element.nil? }
-
-      return piece unless piece.nil?
-    end
-  end
 
   def format_row(square, square_index, row_index)
     formatted = if square.nil?
