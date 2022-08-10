@@ -44,6 +44,18 @@ class ChessBoard
     end
   end
 
+  # Updates the pieces position
+  def update_board
+    board.each_with_index do |row, row_index|
+      row.each_with_index do |square, square_index|
+        unless square.nil? || square == '.'
+          board[row_index][square_index] = '.'
+          board[square.pos[0]][square.pos[1]] = square
+        end
+      end
+    end
+  end
+
   private
 
   def format_row(square, square_index, row_index)
