@@ -16,6 +16,12 @@ class Knight
               end
   end
 
+  # TODO: Make this function to be a pathfinding function
+  def knight_moves(new_pos)
+    update_pos(new_pos) if valid_move?(@pos, new_pos)
+  end
+
+  # Updates pos (without going out of bounds)
   def update_pos(new_pos)
     return unless new_pos[0].between?(0, @dimensions) && new_pos[1].between?(0, @dimensions)
 
