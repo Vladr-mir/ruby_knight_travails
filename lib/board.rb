@@ -22,7 +22,7 @@ class ChessBoard
     piece.update_pos(new_pos)
 
     board[new_pos[0]][new_pos[1]] = piece
-    board[pos[0]][pos[1]] = nil
+    board[pos[0]][pos[1]] = '.'
   end
 
   def get_piece(piece_pos)
