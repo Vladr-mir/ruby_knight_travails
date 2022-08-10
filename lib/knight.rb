@@ -6,7 +6,8 @@ require 'colorize'
 class Knight
   attr_reader :pos
 
-  def initialize(is_white)
+  def initialize(is_white, dimensions)
+    @dimensions = dimensions - 1
     @pos = nil
     @symbol = if is_white
                 '♘'
@@ -16,7 +17,7 @@ class Knight
   end
 
   def update_pos(new_pos)
-    return unless new_pos[0].between?(0, 7) && new_pos[1].between?(0, 7)
+    return unless new_pos[0].between?(0, @dimensions) && new_pos[1].between?(0, @dimensions)
 
     @pos = new_pos
   end
@@ -31,22 +32,32 @@ class Knight
     @symbol
   end
 
+  def movement_range
+    [
+      [2, 1],
+      [2, -1],
+      [-2, 1],
+      [-2, -1],
+      [1, 2],
+      [1, -2],
+      [-1, 2],
+      [-1, -2]
+    ]
+  end
+
   private
 
   def valid_moves(pos)
-    moves = [
-      [pos[0] + 2, pos[1] + 1],
-      [pos[0] + 2, pos[1] - 1],
-      [pos[0] + 1, pos[1] + 2],
-      [pos[0] + 1, pos[1] - 2],
-      [pos[0] - 2, pos[1] + 1],
-      [pos[0] - 2, pos[1] - 1],
-      [pos[0] - 1, pos[1] + 2],
-      [pos[0] - 1, pos[1] - 2]
-    ]
+    # Find relative moves
+    relative_moves = movement_range
+    relative_moves.map do |row|
+      row[0] += pos[0]
+      row[1] += pos[1]
+    end
 
-    moves.select do |row|
-      row = row.select { |pos| pos.between?(0, 7) }
+    # Deletes invalid moves
+    relative_moves.select do |row|
+      row = row.select { |new_pos| new_pos.between?(0, @dimensions) }
       row.length >= 2
     end
   end
