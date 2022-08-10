@@ -1,41 +1,19 @@
 # frozen_string_literal: false
 
 require 'colorize'
+require_relative 'piece'
 
 # Knight piece
-class Knight
+class Knight < Piece
   attr_reader :pos
 
   def initialize(is_white, dimensions)
-    @dimensions = dimensions - 1
-    @pos = nil
-    @symbol = if is_white
-                '♘'
-              else
-                '♞'
-              end
-  end
-
-  # TODO: Make this function to be a pathfinding function
-  def knight_moves(new_pos)
-    update_pos(new_pos) if valid_move?(@pos, new_pos)
-  end
-
-  # Updates pos (without going out of bounds)
-  def update_pos(new_pos)
-    return unless new_pos[0].between?(0, @dimensions) && new_pos[1].between?(0, @dimensions)
-
-    @pos = new_pos
-  end
-
-  def valid_move?(pos, new_pos)
-    valid = valid_moves(pos)
-    valid.each { |move| return true if move == new_pos }
-    false
-  end
-
-  def to_s
-    @symbol
+    symbol = if is_white
+               '♘'
+             else
+               '♞'
+             end
+    super(dimensions, symbol)
   end
 
   def movement_range
@@ -51,20 +29,8 @@ class Knight
     ]
   end
 
-  private
-
-  def valid_moves(pos)
-    # Find relative moves
-    relative_moves = movement_range
-    relative_moves.map do |row|
-      row[0] += pos[0]
-      row[1] += pos[1]
-    end
-
-    # Deletes invalid moves
-    relative_moves.select do |row|
-      row = row.select { |new_pos| new_pos.between?(0, @dimensions) }
-      row.length >= 2
-    end
+  # TODO: Make this function to be a pathfinding function
+  def knight_moves(new_pos)
+    update_pos(new_pos) if valid_move?(@pos, new_pos)
   end
 end
