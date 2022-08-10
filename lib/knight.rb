@@ -2,10 +2,13 @@
 
 require 'colorize'
 require_relative 'piece'
+require_relative 'pathfinder'
 
 # Knight piece
 class Knight < Piece
   attr_reader :pos
+
+  include PathFinder
 
   def initialize(is_white, dimensions)
     symbol = if is_white
