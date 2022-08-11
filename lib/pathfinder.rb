@@ -52,20 +52,18 @@ module PathFinder
       end
     end
 
-    def build_graph(node = @root, &find_positions)
-      return if node.nil?
+    def build_graph(&find_positions)
+      level_order do |node|
+        positions = calculate_childs(node, &find_positions)
+        return if node.nil?
 
-      positions = calculate_childs(node, &find_positions)
-      return if positions.empty?
-
-      positions.each do |position|
-        node.childs << Node.new(position)
+        positions.each { |position| node.childs << Node.new(position) }
       end
-      node.childs.each { |child| build_graph(child, &find_positions) }
+      # node.childs.each { |child| build_graph(child, &find_positions) }
     end
 
-    def calculate_childs(node, &operation)
-      positions = operation.call(node)
+    def calculate_childs(node, &find_positions)
+      positions = find_positions.call(node)
       @visited.each do |visited_pos|
         positions = positions.reject { |posible_move| posible_move == visited_pos }
       end
