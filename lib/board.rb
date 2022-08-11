@@ -25,6 +25,10 @@ class ChessBoard
     board[pos[0]][pos[1]] = '.'
   end
 
+  def place_symbol(pos, symbol)
+    board[pos[0]][pos[1]] = symbol
+  end
+
   def get_piece(piece_pos)
     board[piece_pos[0]][piece_pos[1]]
   end
