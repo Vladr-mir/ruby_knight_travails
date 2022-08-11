@@ -7,7 +7,7 @@ require_relative 'board'
 board = ChessBoard.new(8)
 knight = Knight.new(false, 8)
 
-from = [0, 0]
+from = [3, 3]
 
 board.place_piece(knight, from[0])
 
