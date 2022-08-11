@@ -7,14 +7,13 @@ require_relative 'board'
 board = ChessBoard.new(8)
 knight = Knight.new(false, 8)
 
-from = [3, 3]
+from = [0, 0]
 
 board.place_piece(knight, from[0])
-path = knight.find_path(from)
 
 0.upto(7).each do |row|
   0.upto(7).each do |square|
-    path = knight.find_path(from[0], [row, square])
+    path = knight.find_path(from, [row, square])
     board.place_symbol([row, square], path.length - 1)
   end
 end

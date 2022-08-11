@@ -8,7 +8,7 @@ board = ChessBoard.new(8)
 knight = Knight.new(false, 8)
 
 moves_counter = 0
-move_from_to = [[3, 3], [4, 3]]
+move_from_to = [[0, 0], [7, 7]]
 
 board.place_piece(knight, move_from_to[0])
 path = knight.find_path(*move_from_to)
