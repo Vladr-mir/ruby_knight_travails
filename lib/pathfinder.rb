@@ -1,6 +1,5 @@
 # lib/pathfinder.rb
 # frozen_string_literal: false
-require 'pry-byebug'
 
 # The `PathFinder` module uses graph functions.
 # gets the movement of a piece and a desired position then find the path
@@ -9,7 +8,11 @@ module PathFinder
   def find_path(pos, new_pos)
     graph = Graph.new(pos)
     graph.build_graph { |node| find_valid_moves(node.data) }
-    graph.level_order { |node| return node.data if node.data == new_pos }
+
+    path = []
+    path << new_pos
+    path << graph.get_parent(path.last).data until graph.get_parent(path.last).nil?
+    path.reverse
   end
 
   # Graph class and find methods
@@ -34,24 +37,40 @@ module PathFinder
       end
     end
 
+    def preorder(node = @root, &operation)
+      return if node.nil?
+
+      operation.call(node)
+      node.childs.each { |child| preorder(child, &operation) }
+    end
+
+    def get_parent(value)
+      return nil if value == @root.data
+
+      preorder do |node|
+        node.childs.each { |child| return node if !child.nil? && child.data == value }
+      end
+    end
+
     def build_graph(node = @root, &find_positions)
       return if node.nil?
 
-      positions = find_positions.call(node)
-      @visited.uniq!
-      @visited.each do |visited_pos|
-        positions = positions.reject { |posible_move| posible_move == visited_pos }
-      end
+      positions = calculate_childs(node, &find_positions)
       return if positions.empty?
 
       positions.each do |position|
-        @visited << node.data
         node.childs << Node.new(position)
       end
+      node.childs.each { |child| build_graph(child, &find_positions) }
+    end
 
-      node.childs.each do |child|
-        build_graph(child, &find_positions)
+    def calculate_childs(node, &operation)
+      positions = operation.call(node)
+      @visited.each do |visited_pos|
+        positions = positions.reject { |posible_move| posible_move == visited_pos }
       end
+      @visited.push(*positions)
+      positions
     end
   end
 
