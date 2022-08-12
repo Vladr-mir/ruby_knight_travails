@@ -4,23 +4,26 @@
 require_relative 'knight'
 require_relative 'board'
 
-board = ChessBoard.new(8)
-knight = Knight.new(false, 8)
-
 moves_counter = 0
+chess_size = 8
 move_from_to = [[3, 3], [3, 4]]
 
-board.place_piece(knight, move_from_to[0])
+board = ChessBoard.new(chess_size)
+knight = Knight.new(false, chess_size)
+
+knight.update_pos(move_from_to[0])
 path = knight.find_path(*move_from_to)
 
 path.each do |square|
   moves_counter += 1
+  board.place_symbol(square, moves_counter - 1)
   knight.knight_moves(square)
-  board.update_board
 end
+
+board.place_symbol(knight.pos, knight.to_s)
 
 board.pretty_print
 puts "\nYou made it in #{moves_counter - 1} moves! Here's your path:"
 path.each do |move|
-p move
+  p move
 end

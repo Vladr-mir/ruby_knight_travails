@@ -4,12 +4,13 @@
 require_relative 'knight'
 require_relative 'board'
 
-board = ChessBoard.new(8)
-knight = Knight.new(false, 8)
-
+chess_size = 8
 from = [3, 3]
 
-board.place_piece(knight, from[0])
+board = ChessBoard.new(chess_size)
+knight = Knight.new(false, chess_size)
+
+knight.update_pos(from)
 
 0.upto(7).each do |row|
   0.upto(7).each do |square|
