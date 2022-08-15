@@ -6,8 +6,7 @@
 # to the targeted position.
 module PathFinder
   def find_path(pos, new_pos)
-    graph = Graph.new(pos)
-    graph.build_graph { |node| find_valid_moves(node.data) }
+    graph = Graph.new(pos) { |node| find_valid_moves(node.data) }
 
     path = []
     path << new_pos
@@ -18,11 +17,10 @@ module PathFinder
   # Graph class and find methods
   class Graph
     attr_accessor :root
-    attr_reader :visited
 
-    def initialize(pos)
+    def initialize(pos, &find_childs)
       @root = Node.new(pos)
-      @visited = [pos]
+      build_graph(&find_childs) if block_given?
     end
 
     def level_order(node = @root, &operation)
@@ -44,30 +42,32 @@ module PathFinder
       node.childs.each { |child| preorder(child, &operation) }
     end
 
-    def get_parent(value)
-      return nil if value == @root.data
+    def get_parent(data)
+      return nil if data == @root.data
 
       preorder do |node|
-        node.childs.each { |child| return node if !child.nil? && child.data == value }
+        node.childs.each { |child| return node if !child.nil? && child.data == data }
       end
     end
 
     def build_graph(&find_positions)
+      visited = [root.data]
       level_order do |node|
-        positions = calculate_childs(node, &find_positions)
         return if node.nil?
 
+        positions = calculate_childs(node, visited, &find_positions)
         positions.each { |position| node.childs << Node.new(position) }
       end
-      # node.childs.each { |child| build_graph(child, &find_positions) }
     end
 
-    def calculate_childs(node, &find_positions)
+    private
+
+    def calculate_childs(node, visited, &find_positions)
       positions = find_positions.call(node)
-      @visited.each do |visited_pos|
+      visited.each do |visited_pos|
         positions = positions.reject { |posible_move| posible_move == visited_pos }
       end
-      @visited.push(*positions)
+      visited.push(*positions)
       positions
     end
   end
