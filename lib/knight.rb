@@ -31,9 +31,4 @@ class Knight < Piece
       [-1, -2]
     ]
   end
-
-  # TODO: Make this function to be a pathfinding function
-  def knight_moves(new_pos)
-    update_pos(new_pos) if valid_move?(@pos, new_pos)
-  end
 end

@@ -47,11 +47,7 @@ class Piece
     end
   end
 
-  def relative_moves
-    find_valid_moves(@pos)
-  end
-
-  def valid_relative_move?(new_pos)
-    valid_move?(@pos, new_pos)
+  def piece_move(new_pos)
+    update_pos(new_pos) if valid_move?(@pos, new_pos)
   end
 end

@@ -17,7 +17,7 @@ path = knight.find_path(*move_from_to)
 path.each do |square|
   moves_counter += 1
   board.place_symbol(square, moves_counter - 1)
-  knight.knight_moves(square)
+  knight.piece_move(square)
 end
 
 board.place_symbol(knight.pos, knight.to_s)
